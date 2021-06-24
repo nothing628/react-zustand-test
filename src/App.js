@@ -1,22 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import useAppStore from "./store";
+import { useEffect } from "react";
+import shallow from "zustand/shallow";
 
 function App() {
+  const [products, clear, loadProducts] = useAppStore(
+    (state) => [state.products, state.clear, state.loadProducts],
+    shallow
+  );
+
+  useEffect(() => {
+    clear();
+    loadProducts();
+  }, [clear, loadProducts]);
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {products.map((product) => (
+          <li key={product.id}>{product.name}</li>
+        ))}
       </header>
     </div>
   );
